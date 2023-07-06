@@ -1,7 +1,6 @@
 from flask import Flask, Blueprint, jsonify, render_template, request
 import json
 import findspark
-from inflect import engine
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from engine import RecommendationEngine
@@ -14,9 +13,6 @@ findspark.init()
 
 # Création d'une instance de la classe RecommendationEngine
 
-conf = SparkConf().setAppName("movie_recommendation-server")
-sc = SparkContext(conf=conf, pyFiles=['engine.py', 'app.py'])
-engine = RecommendationEngine(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
 @main.route("/", methods=["GET", "POST", "PUT"])
 def home():

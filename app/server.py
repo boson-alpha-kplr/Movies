@@ -19,7 +19,6 @@ movies_set_path = sys.argv[1] if len(sys.argv) > 1 else ""
 ratings_set_path = sys.argv[2] if len(sys.argv) > 2 else ""
 
 # Création de l'application Flask
-from engine import RecommendationEngine
 app = create_app(sc, movies_set_path, ratings_set_path)
 
 # Configurez et démarrez le serveur CherryPy

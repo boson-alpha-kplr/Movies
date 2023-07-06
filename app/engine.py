@@ -4,6 +4,7 @@ from pyspark.sql.functions import col
 from pyspark.ml.recommendation import ALS
 from pyspark.ml.evaluation import RegressionEvaluator
 from server import sc
+
 class RecommendationEngine:
     def __init__(self, spark_context, movies_set_path, ratings_set_path, maxIter=10, regParam=0.1):
         self.spark = SparkSession.builder.config(conf=spark_context.getConf()).getOrCreate()
