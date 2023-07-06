@@ -1,17 +1,18 @@
 from flask import Flask, Blueprint, jsonify, render_template, request
 import json
 import findspark
-from inflect import engine
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from engine import RecommendationEngine
-from server import sc
 
 # Création du Blueprint Flask
 main = Blueprint('main', __name__)
 
 # Initialisation de Spark
 findspark.init()
+
+# Définition de l'instance de RecommendationEngine
+engine = None
 
 @main.route("/", methods=["GET", "POST", "PUT"])
 def home():
@@ -60,6 +61,7 @@ def get_ratings_for_user(user_id):
 
 # Fonction pour créer l'application Flask
 def create_app(spark_context, movies_set_path, ratings_set_path):
+    global engine
     # Initialisation du moteur de recommandation avec le contexte Spark et les jeux de données
     engine = RecommendationEngine(spark_context, movies_set_path, ratings_set_path)
 
