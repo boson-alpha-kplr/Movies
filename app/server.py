@@ -4,7 +4,7 @@ import cherrypy
 import os
 from cheroot.wsgi import Server as WSGIServer
 from pyspark import SparkContext, SparkConf
-from app.app import create_app
+from app import create_app
 
 # Arrêtez le SparkContext existant s'il est déjà actif
 if 'sc' in globals():

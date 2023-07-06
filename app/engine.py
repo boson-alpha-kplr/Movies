@@ -82,7 +82,7 @@ class RecommendationEngine:
         training, test = self.ratings_df.randomSplit([0.8, 0.2])
 
         # Re-entraînement du modèle
-        self.model = self.__train_model(training)
+        self.__train_model(training)
 
         # Évaluation du modèle
         self.__evaluate(test)
@@ -122,7 +122,8 @@ class RecommendationEngine:
         rmse = evaluator.evaluate(predictions)
         self.rmse = rmse
         print(f"Root Mean Squared Error (RMSE): {rmse}")
-   
+
+'''
 # Création d'une instance de la classe RecommendationEngine
 engine = RecommendationEngine(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
@@ -134,3 +135,4 @@ if engine.is_user_known(user_id):
     engine.add_ratings(user_id, ratings)
     prediction = engine.predict_rating(user_id, movie.movieId)
     recommendations = engine.recommend_for_user(user_id, 10)
+'''
