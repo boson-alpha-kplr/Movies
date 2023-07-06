@@ -12,6 +12,11 @@ main = Blueprint('main', __name__)
 # Initialisation de Spark
 findspark.init()
 
+# Création d'une instance de la classe RecommendationEngine
+
+conf = SparkConf().setAppName("movie_recommendation-server")
+sc = SparkContext(conf=conf, pyFiles=['engine.py', 'app.py'])
+engine = RecommendationEngine(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
 @main.route("/", methods=["GET", "POST", "PUT"])
 def home():
@@ -81,3 +86,8 @@ def parse_ratings_file(file):
         user_id, movie_id, rating = line.strip().split(",")
         ratings.append((int(user_id), int(movie_id), float(rating)))
     return ratings
+
+app = create_app(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
+
+if __name__ == "__main__":
+    app.run()
