@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, jsonify, render_template, request
 import json
 import findspark
+from inflect import engine
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from engine import RecommendationEngine
@@ -11,8 +12,6 @@ main = Blueprint('main', __name__)
 # Initialisation de Spark
 findspark.init()
 
-# Définition de l'instance de RecommendationEngine
-engine = None
 
 @main.route("/", methods=["GET", "POST", "PUT"])
 def home():
@@ -60,8 +59,7 @@ def get_ratings_for_user(user_id):
     return jsonify(ratings)
 
 # Fonction pour créer l'application Flask
-def create_app(spark_context, movies_set_path, ratings_set_path):
-    global engine
+def create_app(spark_context, movies_set_path, ratings_set_path):   
     # Initialisation du moteur de recommandation avec le contexte Spark et les jeux de données
     engine = RecommendationEngine(spark_context, movies_set_path, ratings_set_path)
 
@@ -75,4 +73,11 @@ def create_app(spark_context, movies_set_path, ratings_set_path):
 
     return app
 
-
+# Fonction pour traiter le fichier de notation des utilisateurs
+def parse_ratings_file(file):
+    ratings = []
+    for line in file:
+        # Supposons que chaque ligne du fichier est au format "user_id,movie_id,rating"
+        user_id, movie_id, rating = line.strip().split(",")
+        ratings.append((int(user_id), int(movie_id), float(rating)))
+    return ratings

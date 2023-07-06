@@ -6,7 +6,7 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from server import sc
 class RecommendationEngine:
     def __init__(self, spark_context, movies_set_path, ratings_set_path, maxIter=10, regParam=0.1):
-        self.spark = SparkSession(spark_context)
+        self.spark = SparkSession.builder.config(conf=spark_context.getConf()).getOrCreate()
         self.sc = spark_context
         self.maxIter = maxIter
         self.regParam = regParam
