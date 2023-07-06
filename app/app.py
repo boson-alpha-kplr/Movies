@@ -89,5 +89,7 @@ def parse_ratings_file(file):
 
 app = create_app(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
+#  Cela permet de s'assurer que l'application Flask est exécutée uniquement lorsque le script est exécuté directement, 
+# et non lorsqu'il est importé en tant que module.
 if __name__ == "__main__":
     app.run()
