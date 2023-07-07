@@ -1,19 +1,20 @@
+from app.engine import RecommendationEngine
 from flask import Flask, Blueprint, jsonify, render_template, request
 import json
 import findspark
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
-from engine import RecommendationEngine
 
-# Création du Blueprint Flask
+# Création du Blueprint Flask pour organiser les routes de votre application Flask
 main = Blueprint('main', __name__)
 
 # Initialisation de Spark
 findspark.init()
 
 # Création d'une instance de la classe RecommendationEngine
-
-
+engine = None
+# Routes Flask :
+# Route principale qui renvoie le template HTML 
 @main.route("/", methods=["GET", "POST", "PUT"])
 def home():
     return render_template("index.html")
@@ -60,10 +61,18 @@ def get_ratings_for_user(user_id):
     return jsonify(ratings)
 
 # Fonction pour créer l'application Flask
-def create_app(spark_context, movies_set_path, ratings_set_path):   
+def create_app(spark_context, movies_set_path, ratings_set_path):  
+    global engine 
     # Initialisation du moteur de recommandation avec le contexte Spark et les jeux de données
     engine = RecommendationEngine(spark_context, movies_set_path, ratings_set_path)
-
+    # Exemple d'utilisation des méthodes de la classe RecommendationEngine
+    user_id = engine.create_user(None)
+    if engine.is_user_known(user_id):
+        movie = engine.get_movie(None)
+        ratings = engine.get_ratings_for_user(user_id)
+        engine.add_ratings(user_id, ratings)
+        prediction = engine.predict_rating(user_id, movie.movieId)
+        recommendations = engine.recommend_for_user(user_id, 10)
     # Création de l'application Flask
     app = Flask(__name__)
 
@@ -83,9 +92,10 @@ def parse_ratings_file(file):
         ratings.append((int(user_id), int(movie_id), float(rating)))
     return ratings
 
+from server import sc
 app = create_app(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
-#  Cela permet de s'assurer que l'application Flask est exécutée uniquement lorsque le script est exécuté directement, 
+# Cela permet de s'assurer que l'application Flask est exécutée uniquement lorsque le script est exécuté directement, 
 # et non lorsqu'il est importé en tant que module.
 if __name__ == "__main__":
     app.run()

@@ -8,7 +8,6 @@ from server import sc
 class RecommendationEngine:
     def __init__(self, spark_context, movies_set_path, ratings_set_path, maxIter=10, regParam=0.1):
         self.spark = SparkSession.builder.config(conf=spark_context.getConf()).getOrCreate()
-        self.sc = spark_context
         self.maxIter = maxIter
         self.regParam = regParam
 
@@ -124,16 +123,7 @@ class RecommendationEngine:
         self.rmse = rmse
         print(f"Root Mean Squared Error (RMSE): {rmse}")
 
-'''
-# Création d'une instance de la classe RecommendationEngine
-engine = RecommendationEngine(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
-# Exemple d'utilisation des méthodes de la classe RecommendationEngine
-user_id = engine.create_user(None)
-if engine.is_user_known(user_id):
-    movie = engine.get_movie(None)
-    ratings = engine.get_ratings_for_user(user_id)
-    engine.add_ratings(user_id, ratings)
-    prediction = engine.predict_rating(user_id, movie.movieId)
-    recommendations = engine.recommend_for_user(user_id, 10)
-'''
+
+
+
