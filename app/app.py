@@ -1,4 +1,3 @@
-from app.engine import RecommendationEngine
 from flask import Flask, Blueprint, jsonify, render_template, request
 import json
 import findspark
@@ -62,6 +61,7 @@ def get_ratings_for_user(user_id):
 
 # Fonction pour créer l'application Flask
 def create_app(spark_context, movies_set_path, ratings_set_path):  
+    from engine import RecommendationEngine
     global engine 
     # Initialisation du moteur de recommandation avec le contexte Spark et les jeux de données
     engine = RecommendationEngine(spark_context, movies_set_path, ratings_set_path)
@@ -92,10 +92,12 @@ def parse_ratings_file(file):
         ratings.append((int(user_id), int(movie_id), float(rating)))
     return ratings
 
+
+'''
 from server import sc
 app = create_app(sc, "app/ml-latest/movies.csv", "app/ml-latest/movies.csv")
 
 # Cela permet de s'assurer que l'application Flask est exécutée uniquement lorsque le script est exécuté directement, 
 # et non lorsqu'il est importé en tant que module.
 if __name__ == "__main__":
-    app.run()
+    app.run()'''
